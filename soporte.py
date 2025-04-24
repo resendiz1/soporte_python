@@ -33,7 +33,8 @@ def login():
         usuario = cursor.fetchone()
 
         if usuario and bcrypt.checkpw(password.encode('utf-8'), usuario['password'].encode('utf-8')):
-            messagebox.showinfo('Login exitoso', f"Welcome, {usuario['name']}")
+            
+            pedir_soporte_formulario()
 
         else:
             messagebox.showerror("Error", "Las credenciales son incorrectas")
@@ -44,6 +45,81 @@ def login():
     finally:
         if 'conexion' in locals() and conexion.is_connected():
             conexion.close()
+
+
+
+def pedir_soporte_formulario():
+    
+    formulario_soporte = tk.Tk()
+    formulario_soporte.title("Abrir Ticket de Soporte")
+    formulario_soporte.geometry("500x700")
+    formulario_soporte.configure(bg="#2f2f2f")
+
+
+    #variables de estilos de las label y las entry
+    estilo_label = {
+        "bg": "#2f2f2f", 
+        "fg": "#ffffff", 
+        "font": ("Segoe UI", 14)
+    }
+
+
+    estilo_entry = {
+        "bg": "#444444", 
+        "fg": "#ffffff", 
+        "insertbackground": "#ffffff", 
+        "relief": "flat", 
+        "width":25,
+        "font": ("Segoe UI", 14),
+    }
+
+    tk.Label(formulario_soporte, text="Descripción: ", **estilo_label)
+
+
+    #Text de la descripcion
+    tk.Label(formulario_soporte, text="Descripcion: ", **estilo_label).pack(pady=(25,2), anchor="w", padx=(20,0))
+    descripcion = tk.Text(formulario_soporte, height=5, width=40, relief="flat", font=("Segoe UI", 12), )
+    descripcion.pack(pady=(10,5), anchor="c", padx=(20,0))
+
+
+
+
+
+    tk.Label(formulario_soporte, text="Dispositivo que fallo: ", **estilo_label).pack(pady=(25,2), anchor="w", padx=(20,0))
+    
+    #Option menu para el dispositivo que fallo
+    dispositivo_seleccionado = tk.StringVar(formulario_soporte)
+    dispositivo_seleccionado.set("Dispositivo que fallo") #Valos por defecto
+    #Lista de opciones
+    opciones = ['Computadora','Impresora','​Otro']
+    #personalizar menu desplegable
+
+
+    #crear el optionMenu
+    dispositivos = tk.OptionMenu(formulario_soporte, dispositivo_seleccionado, *opciones)
+    dispositivos["menu"].config(bg="#444444", fg="#ffffff", activebackground="#555555", activeforeground="#ffffff", borderwidth=0,  font=("Segoe UI", 10))
+    dispositivos.config(width=40, bg="#444444", fg="#ffffff", highlightthickness=0, activebackground="#555555", anchor="w")
+    dispositivos.pack(pady=(10,5))
+    #Option menu para el dispositivo que fallo
+
+
+    if dispositivo_seleccionado.get() == "Otro":
+        label_otro.pack_forget(pady=(25,2), anchor="w", padx=(20,0))
+
+
+
+    #Aqui va el input que esta oculto hasta que se selecciona "Otro"
+    label_otro = tk.Label(formulario_soporte, text="Escribe lo que fallo: ", **estilo_label)#.pack_forget(pady=(25,2), anchor="w", padx=(20,0))
+    #Aqui va el input que esta oculto hasta que se selecciona "Otro"
+
+
+
+
+
+    formulario_soporte.mainloop()
+
+
+
 
 
 
@@ -68,7 +144,7 @@ estilo_entry = {
     "relief": "flat", 
     "width":25,
     "font": ("Segoe UI", 14),
-    }
+}
 
 
 #Icono del boton
@@ -80,12 +156,14 @@ icono = ImageTk.PhotoImage(icono_img)
 #entry del email
 tk.Label(root, text="Correo electronico: ", **estilo_label).pack(pady=(20,5), anchor="w", padx=(20,0))
 entry_email = tk.Entry(root, **estilo_entry)
+entry_email.insert(0, 'resendiz.galleta@gmail.com')
 entry_email.pack(pady=5, anchor="c", padx=(20,0))
 
 
 #entry password
 tk.Label(root, text="Contraseña: ", **estilo_label).pack(pady=(20,5), anchor="w", padx=(20,0))
 entry_password = tk.Entry(root, show="*", **estilo_entry)
+entry_password.insert(0, 'password')
 entry_password.pack(pady=5, anchor="c", padx=(20,0))
 
 
